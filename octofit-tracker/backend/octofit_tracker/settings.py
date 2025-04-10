@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-^vo9#@-zgu(t%ch%^#_$6rcz^i5*v8@lokjo*9q2ac8=@^5uns"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
-ALLOWED_HOSTS += ['friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev', 'localhost']
+# Restrict ALLOWED_HOSTS for production
+ALLOWED_HOSTS = ['friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev', 'localhost']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "corsheaders",
     'octofit_tracker',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -120,13 +121,20 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+# Add STATIC_ROOT for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Allow all origins for CORS
-CORS_ALLOW_ALL_ORIGINS = True
+# Update CORS settings for production
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    'https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev',
+    'http://localhost:8000',
+]
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',
@@ -135,4 +143,8 @@ CORS_ALLOW_METHODS = [
     'DELETE',
     'OPTIONS',
 ]
-CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOW_HEADERS = [
+    'Authorization',
+    'Content-Type',
+    'X-CSRFToken',
+]

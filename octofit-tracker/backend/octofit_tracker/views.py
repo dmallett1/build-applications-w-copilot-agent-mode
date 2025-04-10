@@ -8,11 +8,11 @@ from rest_framework.response import Response
 def api_root(request, format=None):
     base_url = 'https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/'
     return Response({
-        'users': base_url + 'api/users/',
-        'teams': base_url + 'api/teams/',
-        'activities': base_url + 'api/activities/',
-        'leaderboard': base_url + 'api/leaderboard/',
-        'workouts': base_url + 'api/workouts/'
+        'users': base_url + 'api-root/users/',
+        'teams': base_url + 'api-root/teams/',
+        'activities': base_url + 'api-root/activities/',
+        'leaderboard': base_url + 'api-root/leaderboard/',
+        'workouts': base_url + 'api-root/workouts/'
     })
 
 class UserViewSet(viewsets.ModelViewSet):

@@ -17,10 +17,18 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.urls import reverse
 from rest_framework.routers import DefaultRouter
 from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet
 
-router = DefaultRouter()
+class CustomDefaultRouter(DefaultRouter):
+    def get_api_root_view(self, *args, **kwargs):
+        api_root_view = super().get_api_root_view(*args, **kwargs)
+        api_root_view.cls.base_url = settings.ALLOWED_HOSTS[0]  # Use the first allowed host
+        return api_root_view
+
+router = CustomDefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'activity', ActivityViewSet)
