@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import User, Team, Activity, Leaderboard, Workout
+from .models import User, Team, Activities, Leaderboard, Workout
 
 class UserModelTest(TestCase):
     def test_user_creation(self):
@@ -11,11 +11,11 @@ class TeamModelTest(TestCase):
         team = Team.objects.create(name="Team A", members=["user1", "user2"])
         self.assertEqual(team.name, "Team A")
 
-class ActivityModelTest(TestCase):
-    def test_activity_creation(self):
+class ActivitiesModelTest(TestCase):
+    def test_activities_creation(self):
         user = User.objects.create(email="test@example.com", name="Test User", password="password123")
-        activity = Activity.objects.create(user=user, type="Running", duration=30)
-        self.assertEqual(activity.type, "Running")
+        activities = Activities.objects.create(user=user, type="Running", duration=30)
+        self.assertEqual(activities.type, "Running")
 
 class LeaderboardModelTest(TestCase):
     def test_leaderboard_creation(self):

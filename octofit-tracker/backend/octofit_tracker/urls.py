@@ -1,18 +1,5 @@
 """
 URL configuration for octofit_tracker project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
 from django.contrib import admin
@@ -20,18 +7,36 @@ from django.urls import path, include
 from django.conf import settings
 from django.urls import reverse
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .views import UserViewSet, TeamViewSet, ActivitiesViewSet, LeaderboardViewSet, WorkoutViewSet
+
+class CustomAPIRootView(APIView):
+    api_root_dict = None  # Add this attribute to handle the argument
+
+    def get(self, request, *args, **kwargs):
+        base_url = "https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev"
+        return Response({
+            "users": f"{base_url}/api-root/users/",
+            "teams": f"{base_url}/api-root/teams/",
+            "activities": f"{base_url}/api-root/activities/",
+            "leaderboard": f"{base_url}/api-root/leaderboard/",
+            "workouts": f"{base_url}/api-root/workouts/",
+        })
 
 class CustomDefaultRouter(DefaultRouter):
+    api_root_dict = None  # Add this attribute to handle the argument
+
     def get_api_root_view(self, *args, **kwargs):
         api_root_view = super().get_api_root_view(*args, **kwargs)
         api_root_view.cls.base_url = settings.ALLOWED_HOSTS[0]  # Use the first allowed host
         return api_root_view
 
 router = CustomDefaultRouter()
+router.APIRootView = CustomAPIRootView
 router.register(r'users', UserViewSet)
 router.register(r'teams', TeamViewSet)
-router.register(r'activity', ActivityViewSet)
+router.register(r'activities', ActivitiesViewSet)
 router.register(r'leaderboard', LeaderboardViewSet)
 router.register(r'workouts', WorkoutViewSet)
 

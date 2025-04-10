@@ -4,7 +4,7 @@ function Users() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api/users/')
+    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api-root/users/')
       .then(response => response.json())
       .then(data => setUsers(data))
       .catch(error => console.error('Error fetching users:', error));

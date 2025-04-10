@@ -4,7 +4,7 @@ function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api/leaderboard/')
+    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api-root/leaderboard/')
       .then(response => response.json())
       .then(data => setLeaderboard(data))
       .catch(error => console.error('Error fetching leaderboard:', error));

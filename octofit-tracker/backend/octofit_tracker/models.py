@@ -12,7 +12,7 @@ class Team(models.Model):
     name = models.CharField(max_length=255)
     members = models.JSONField()
 
-class Activity(models.Model):
+class Activities(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
     duration = models.IntegerField()

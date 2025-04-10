@@ -1,56 +1,44 @@
 from django.core.management.base import BaseCommand
-from octofit_tracker.models import User, Team, Activity, Leaderboard, Workout
-from datetime import timedelta
-from pymongo import MongoClient
-from django.conf import settings
+from octofit_tracker.models import User, Team, Activities, Leaderboard, Workout
+from bson import ObjectId
 
 class Command(BaseCommand):
-    help = 'Populate the database with test data for users, teams, activity, leaderboard, and workouts'
+    help = 'Populate the database with test data for users, teams, activities, leaderboard, and workouts'
 
     def handle(self, *args, **kwargs):
-        # Clear existing data using MongoDB client
-        client = MongoClient()
-        db = client[settings.DATABASES['default']['NAME']]
-        db.users.delete_many({})
-        db.teams.delete_many({})
-        db.activity.delete_many({})
-        db.leaderboard.delete_many({})
-        db.workouts.delete_many({})
+        # Clear existing data
+        User.objects.all().delete()
+        Team.objects.all().delete()
+        Activities.objects.all().delete()
+        Leaderboard.objects.all().delete()
+        Workout.objects.all().delete()
 
         # Create users
         users = [
-            User(email='thundergod@mhigh.edu', name='Thor', password='password123'),
-            User(email='metalgeek@mhigh.edu', name='Tony Stark', password='password123'),
-            User(email='zerocool@mhigh.edu', name='Steve Rogers', password='password123'),
-            User(email='crashoverride@hmhigh.edu', name='Natasha Romanoff', password='password123'),
-            User(email='sleeptoken@mhigh.edu', name='Bruce Banner', password='password123'),
+            User(id=ObjectId(), name='thundergod', email='thundergod@mhigh.edu', password='thundergodpassword'),
+            User(id=ObjectId(), name='metalgeek', email='metalgeek@mhigh.edu', password='metalgeekpassword'),
+            User(id=ObjectId(), name='zerocool', email='zerocool@mhigh.edu', password='zerocoolpassword'),
+            User(id=ObjectId(), name='crashoverride', email='crashoverride@hmhigh.edu', password='crashoverridepassword'),
+            User(id=ObjectId(), name='sleeptoken', email='sleeptoken@mhigh.edu', password='sleeptokenpassword'),
         ]
-        for user in users:
-            user.save()
+        User.objects.bulk_create(users)
 
         # Create teams
         teams = [
-            Team(name='Blue Team', members=[]),
-            Team(name='Gold Team', members=[]),
+            Team(id=ObjectId(), name='Blue Team', members=[]),
+            Team(id=ObjectId(), name='Gold Team', members=[]),
         ]
-        for team in teams:
-            team.save()
-
-        # Add members to teams
-        teams[0].members = [str(users[0].id), str(users[1].id)]
-        teams[1].members = [str(users[2].id), str(users[3].id), str(users[4].id)]
-        for team in teams:
-            team.save()
+        Team.objects.bulk_create(teams)
 
         # Create activities
         activities = [
-            Activity(user=users[0], type='Cycling', duration=60),
-            Activity(user=users[1], type='Crossfit', duration=120),
-            Activity(user=users[2], type='Running', duration=90),
-            Activity(user=users[3], type='Strength', duration=30),
-            Activity(user=users[4], type='Swimming', duration=75),
+            Activities(user=users[0], type='Cycling', duration=60),
+            Activities(user=users[1], type='Crossfit', duration=120),
+            Activities(user=users[2], type='Running', duration=90),
+            Activities(user=users[3], type='Strength', duration=30),
+            Activities(user=users[4], type='Swimming', duration=75),
         ]
-        Activity.objects.bulk_create(activities)
+        Activities.objects.bulk_create(activities)
 
         # Create leaderboard entries
         leaderboard_entries = [

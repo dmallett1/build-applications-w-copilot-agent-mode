@@ -4,7 +4,7 @@ function Workouts() {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api/workouts/')
+    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api-root/workouts/')
       .then(response => response.json())
       .then(data => setWorkouts(data))
       .catch(error => console.error('Error fetching workouts:', error));

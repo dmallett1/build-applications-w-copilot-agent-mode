@@ -4,7 +4,7 @@ function Teams() {
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {
-    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api/teams/')
+    fetch('https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev/api-root/teams/')
       .then(response => response.json())
       .then(data => setTeams(data))
       .catch(error => console.error('Error fetching teams:', error));

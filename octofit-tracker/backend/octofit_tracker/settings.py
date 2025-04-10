@@ -135,6 +135,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://friendly-xylophone-x54vg49qwgx3p4xg-8000.app.github.dev',
     'http://localhost:8000',
 ]
+CORS_ALLOWED_ORIGINS.append('https://friendly-xylophone-x54vg49qwgx3p4xg-3000.app.github.dev')
+
 CORS_ALLOW_METHODS = [
     'GET',
     'POST',

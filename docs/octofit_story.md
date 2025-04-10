@@ -2,7 +2,7 @@
 
 ## OctoFit Tracker application story for Mergington High School
 
-Paul Octo has been a physical education teacher at Mergington High School for over 8 years. Despite his enthusiasm and creative approach to gym class, he's been increasingly concerned about students' physical activity declining once they leave school grounds. Many students admitted they rarely exercised outside of the required PE classes.
+Paul Octo has been a physical education teacher at Mergington High School for over 8 years. Despite his enthusiasm and creative approach to gym class, he's been increasingly concerned about students' physical activities declining once they leave school grounds. Many students admitted they rarely exercised outside of the required PE classes.
 After attending a professional development conference on "Technology Integration in Physical Education," Paul became inspired to create a solution. He wanted something that would:
 
 1. Make fitness tracking fun and engaging
@@ -23,7 +23,7 @@ Together, Paul and the IT team identified key requirements for OctoFit Tracker:
 ### User Experience Goals
 
 - Simple, intuitive interface designed specifically for teenagers
-- Quick activity logging to minimize friction
+- Quick activities logging to minimize friction
 - Social features that respect student privacy
 - Gamification elements to maintain engagement
 
@@ -31,14 +31,14 @@ Together, Paul and the IT team identified key requirements for OctoFit Tracker:
 
 - Mobile-responsive web application (accessible on school Chromebooks and personal devices)
 - Secure authentication based on Monafit Tracker's implementation
-- Activity verification system to prevent cheating
+- Activities verification system to prevent cheating
 
 ## Current Development Status
 
 Paul and Jessica have set up a GitHub Codespace environment and are making remarkable progress with GitHub Copilot agent mode. By adapting the Monafit Tracker's structure, the OctoFit Tracker prototype already includes:
 
 - A functional user registration system
-- Basic activity logging for running, walking, and strength training
+- Basic activities logging for running, walking, and strength training
 - The beginning framework for team competitions
 - A simple dashboard showing student progress
 
@@ -67,7 +67,7 @@ In this workshop, you'll:
 **OctoFit Tracker** will include:
 
 - User profiles
-- Activity logging and tracking
+- Activities logging and tracking
 - Team creation and management
 - A competitive leaderboard
 - Personalized workout suggestions
@@ -121,7 +121,7 @@ We'll be using a modern web application stack:
    - Implementing basic models, serializers, URLs, and views
 
 4. **Building Core Features**
-   - Activity logging API
+   - Activities logging API
    - Team management
    - Leaderboard functionality
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Team, Activity, Leaderboard, Workout
+from .models import User, Team, Activities, Leaderboard, Workout
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -9,8 +9,8 @@ class UserAdmin(admin.ModelAdmin):
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-@admin.register(Activity)
-class ActivityAdmin(admin.ModelAdmin):
+@admin.register(Activities)
+class ActivitiesAdmin(admin.ModelAdmin):
     list_display = ('user', 'type', 'duration')
 
 @admin.register(Leaderboard)
