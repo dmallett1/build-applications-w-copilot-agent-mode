@@ -6,7 +6,7 @@
 I want to build an monafit Tracker app that will include the following:
 
 * User authentication and profiles
-* Activity logging and tracking
+* Activities logging and tracking
 * Team creation and management
 * Competitive leader board
 * Personalized workout suggestions
@@ -120,7 +120,7 @@ In our next steps lets think step by step and setup the following in this order
    ex. db.users.createIndex({ "email": 1 }, { unique: true })
 3. settings.py in our django project for mongodb monafit_db database including localhost and the port
 4. settings.py in our django project setup for all installed apps. ex djongo, monafit_tracker, rest_framework
-5. In monafit_tracker project setup and use command touch models.py, serializers.py, urls.py, and views.py for users, teams, activity, leaderboard, and workouts
+5. In monafit_tracker project setup and use command touch models.py, serializers.py, urls.py, and views.py for users, teams, activities, leaderboard, and workouts
 6. Generate code for models.py, serializers.py, and views.py and
 7. make sure urls.py has a root, admin, and api endpoints
     urlpatterns = [
@@ -133,7 +133,7 @@ In our next steps lets think step by step and setup the following in this order
 ### MongoDB commands to initialize and setup `monafit_db`
 
 ```bash
-mongo --eval "db = db.getSiblingDB('monafit_db'); db.createCollection('users'); db.createCollection('teams'); db.createCollection('activity'); db.createCollection('leaderboard'); db.createCollection('workouts'); db.users.createIndex({ email: 1 }, { unique: true }); db.teams.createIndex({ name: 1 }, { unique: true }); db.activity.createIndex({ activity_id: 1 }, { unique: true }); db.leaderboard.createIndex({ leaderboard_id: 1 }, { unique: true }); db.workouts.createIndex({ workout_id: 1 }, { unique: true });"
+mongo --eval "db = db.getSiblingDB('monafit_db'); db.createCollection('users'); db.createCollection('teams'); db.createCollection('activities'); db.createCollection('leaderboard'); db.createCollection('workouts'); db.users.createIndex({ email: 1 }, { unique: true }); db.teams.createIndex({ name: 1 }, { unique: true }); db.activities.createIndex({ activity_id: 1 }, { unique: true }); db.leaderboard.createIndex({ leaderboard_id: 1 }, { unique: true }); db.workouts.createIndex({ workout_id: 1 }, { unique: true });"
 ```
 
 ### Check the database collections
@@ -301,7 +301,7 @@ class Team(models.Model):
     name = models.CharField(max_length=100)
     members = models.ArrayReferenceField(to=User, on_delete=models.CASCADE)
 
-class Activity(models.Model):
+class Activities(models.Model):
     _id = models.ObjectIdField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     activity_type = models.CharField(max_length=100)
@@ -322,7 +322,7 @@ class Workout(models.Model):
 
 ```python
 from rest_framework import serializers
-from .models import User, Team, Activity, Leaderboard, Workout
+from .models import User, Team, Activities, Leaderboard, Workout
 from bson import ObjectId
 
 class ObjectIdField(serializers.Field):
@@ -347,12 +347,12 @@ class TeamSerializer(serializers.ModelSerializer):
         model = Team
         fields = '__all__'
 
-class ActivitySerializer(serializers.ModelSerializer):
+class ActivitiesSerializer(serializers.ModelSerializer):
     _id = ObjectIdField()
     user = ObjectIdField()
 
     class Meta:
-        model = Activity
+        model = Activities
         fields = '__all__'
 
 class LeaderboardSerializer(serializers.ModelSerializer):
@@ -380,8 +380,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, LeaderboardSerializer, WorkoutSerializer
-from .models import User, Team, Activity, Leaderboard, Workout
+from .serializers import UserSerializer, TeamSerializer, ActivitiesSerializer, LeaderboardSerializer, WorkoutSerializer
+from .models import User, Team, Activities, Leaderboard, Workout
 
 @api_view(['GET', 'POST'])
 def api_root(request, format=None):
@@ -405,9 +405,9 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-class ActivityViewSet(viewsets.ModelViewSet):
-    queryset = Activity.objects.all()
-    serializer_class = ActivitySerializer
+class ActivitiesViewSet(viewsets.ModelViewSet):
+    queryset = Activities.objects.all()
+    serializer_class = ActivitiesSerializer
 
 class LeaderboardViewSet(viewsets.ModelViewSet):
     queryset = Leaderboard.objects.all()
@@ -426,12 +426,12 @@ class WorkoutViewSet(viewsets.ModelViewSet):
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet, api_root
+from .views import UserViewSet, TeamViewSet, ActivitiesViewSet, LeaderboardViewSet, WorkoutViewSet, api_root
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'teams', TeamViewSet)
-router.register(r'activities', ActivityViewSet)
+router.register(r'activities', ActivitiesViewSet)
 router.register(r'leaderboard', LeaderboardViewSet)
 router.register(r'workouts', WorkoutViewSet)
 
@@ -448,7 +448,7 @@ urlpatterns = [
 Let's use manage.py to get the database setup and populated based on fields in models.py
 
 - Create populate_db.py as a manage.py command so it initializes and deletes previous data and recreates it
-- populate_db.py creates users, teams, activity, leaderboard, and workouts
+- populate_db.py creates users, teams, activities, leaderboard, and workouts
 - users will be super hero users
 - Include steps to migrate in the monafit_tracker project
 ```
@@ -471,14 +471,14 @@ Should reside under monafit-tracker/backend/monafit_tracker/management/commands/
 # FILE: monafit-tracker/backend/monafit_tracker/management/commands/populate_db.py
 
 from django.core.management.base import BaseCommand
-from monafit_tracker.models import User, Team, Activity, Leaderboard, Workout
+from monafit_tracker.models import User, Team, Activities, Leaderboard, Workout
 from django.conf import settings
 from pymongo import MongoClient
 from datetime import timedelta
 from bson import ObjectId
 
 class Command(BaseCommand):
-    help = 'Populate the database with test data for users, teams, activity, leaderboard, and workouts'
+    help = 'Populate the database with test data for users, teams, activities, leaderboard, and workouts'
 
     def handle(self, *args, **kwargs):
         # Connect to MongoDB
@@ -488,7 +488,7 @@ class Command(BaseCommand):
         # Drop existing collections
         db.users.drop()
         db.teams.drop()
-        db.activity.drop()
+        db.activities.drop()
         db.leaderboard.drop()
         db.workouts.drop()
 
@@ -511,13 +511,13 @@ class Command(BaseCommand):
 
         # Create activities
         activities = [
-            Activity(_id=ObjectId(), user=users[0], activity_type='Cycling', duration=timedelta(hours=1)),
-            Activity(_id=ObjectId(), user=users[1], activity_type='Crossfit', duration=timedelta(hours=2)),
-            Activity(_id=ObjectId(), user=users[2], activity_type='Running', duration=timedelta(hours=1, minutes=30)),
-            Activity(_id=ObjectId(), user=users[3], activity_type='Strength', duration=timedelta(minutes=30)),
-            Activity(_id=ObjectId(), user=users[4], activity_type='Swimming', duration=timedelta(hours=1, minutes=15)),
+            Activities(_id=ObjectId(), user=users[0], type='Cycling', duration=timedelta(hours=1)),
+            Activities(_id=ObjectId(), user=users[1], type='Crossfit', duration=timedelta(hours=2)),
+            Activities(_id=ObjectId(), user=users[2], type='Running', duration=timedelta(hours=1, minutes=30)),
+            Activities(_id=ObjectId(), user=users[3], type='Strength', duration=timedelta(minutes=30)),
+            Activities(_id=ObjectId(), user=users[4], type='Swimming', duration=timedelta(hours=1, minutes=15)),
         ]
-        Activity.objects.bulk_create(activities)
+        Activities.objects.bulk_create(activities)
 
         # Create leaderboard entries
         leaderboard_entries = [
@@ -594,8 +594,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from .serializers import UserSerializer, TeamSerializer, ActivitySerializer, LeaderboardSerializer, WorkoutSerializer
-from .models import User, Team, Activity, Leaderboard, Workout
+from .serializers import UserSerializer, TeamSerializer, ActivitiesSerializer, LeaderboardSerializer, WorkoutSerializer
+from .models import User, Team, Activities, Leaderboard, Workout
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -616,9 +616,9 @@ class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
 
-class ActivityViewSet(viewsets.ModelViewSet):
-    queryset = Activity.objects.all()
-    serializer_class = ActivitySerializer
+class ActivitiesViewSet(viewsets.ModelViewSet):
+    queryset = Activities.objects.all()
+    serializer_class = ActivitiesSerializer
 
 class LeaderboardViewSet(viewsets.ModelViewSet):
     queryset = Leaderboard.objects.all()
@@ -700,7 +700,7 @@ npm install react-router-dom --prefix monafit-tracker/frontend
 Create the following components
 
 - Users
-- Ativities
+- Activities
 - Teams
 - Leaderboard
 - Workouts
