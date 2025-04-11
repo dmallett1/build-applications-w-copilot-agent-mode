@@ -12,10 +12,13 @@ class Team(models.Model):
     name = models.CharField(max_length=255)
     members = models.JSONField()
 
-class Activities(models.Model):
+class Activity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
     duration = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = "Activities"
 
 class Leaderboard(models.Model):
     team = models.EmbeddedField(model_container=Team)
